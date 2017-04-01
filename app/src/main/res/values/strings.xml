@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Advice-project</string>
+    <string name="label_button_liste">Lister</string>
+    <string name="label_button_ajout">Ajouter</string>
+    <string name="view_add_title">Ajouter un avis</string>
+    <string name="button_return_home"> Retourner à l\'accueil</string>
+    <string name="view_list_title">Liste des avis</string>
+    <string name="label_input_title">Title</string>
+    <string name="label_input_description">Description</string>
+    <string name="label_input_note">Note</string>
+    <string name="label_input_auteur">Auteur</string>
+    <string name="label_input_categorie">Categorie</string>
+    <string name="label_button_raz">Reinitialiser</string>
+</resources>
