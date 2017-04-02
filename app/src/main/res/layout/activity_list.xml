@@ -20,5 +20,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/button_return_home"/>
+    <ListView
+        android:id="@+id/list_advices_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </ListView>
 
 </LinearLayout>
