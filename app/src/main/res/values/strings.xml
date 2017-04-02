@@ -11,4 +11,5 @@
     <string name="label_input_auteur">Auteur</string>
     <string name="label_input_categorie">Categorie</string>
     <string name="label_button_raz">Reinitialiser</string>
+    <string name="view_detail_title">Detail sur un avis</string>
 </resources>

@@ -4,14 +4,16 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
 import ngassam.tochap.lionel.advice_project.Model.AdviceDb;
 
-public class ListActivity extends AppCompatActivity implements View.OnClickListener {
+public class ListActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
 
     private Button button_return_home;
     private ListView list_advices;
@@ -29,6 +31,7 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
         list_advices = (ListView) findViewById(R.id.list_advices_id);
         SimpleCursorAdapter adapter = this.makeAdapter(results);
         list_advices.setAdapter(adapter);
+        list_advices.setOnItemClickListener(this);
 
         button_return_home = (Button) findViewById(R.id.id_button_return_home);
         button_return_home.setOnClickListener(this);
@@ -62,4 +65,11 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
         return adapter;
     }
 
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Log.d("Position", position+"="+id);
+        Intent intent = new Intent(getApplicationContext(), DetailActivity.class);
+        intent.putExtra("id", id);
+        startActivity(intent);
+    }
 }

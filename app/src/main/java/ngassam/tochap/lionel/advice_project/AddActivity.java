@@ -1,17 +1,12 @@
 package ngassam.tochap.lionel.advice_project;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
-import android.widget.TextView;
 
 import ngassam.tochap.lionel.advice_project.Metier.Advice;
 import ngassam.tochap.lionel.advice_project.Model.AdviceDb;
@@ -78,13 +73,4 @@ public class AddActivity extends AppCompatActivity implements View.OnClickListen
 
     }
 
-
-
-    /**
-     * Permet de cacher le clavier
-     */
-    public void hideSoftKeyboard() {
-        InputMethodManager inputManager = (InputMethodManager) this.getSystemService(this.INPUT_METHOD_SERVICE);
-        inputManager.hideSoftInputFromWindow(this.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-    }
 }
