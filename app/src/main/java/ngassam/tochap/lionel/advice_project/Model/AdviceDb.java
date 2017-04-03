@@ -82,4 +82,27 @@ public class AdviceDb extends SQLiteOpenHelper {
         return cursor;
     }
 
+    public Cursor fetchById(long id) {
+
+        String[] cols = new String[] {
+                "_id",
+                "title",
+                "description",
+                "note",
+                "auteur",
+                "categorie"
+        };
+
+        String whereClause =  "_id = ?";
+
+        String[] whereArgs = new String[] {
+                String.valueOf(id)
+        };
+
+        Cursor cursor = this.getReadableDatabase().query(TABLE, cols,
+                whereClause, whereArgs, null, null, null);
+
+        return cursor;
+    }
+
 }

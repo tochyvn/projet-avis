@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import ngassam.tochap.lionel.advice_project.Metier.Advice;
 import ngassam.tochap.lionel.advice_project.Model.AdviceDb;
@@ -56,21 +57,56 @@ public class AddActivity extends AppCompatActivity implements View.OnClickListen
             startActivity(intent);
         } else if(id_click == button_add.getId()) {
 
-            Log.d("DB-ADD", edit_note.getText().toString());
-            Advice advice = new Advice(
-                    edit_title.getText().toString(),
-                    edit_description.getText().toString(),
-                    Integer.parseInt(edit_note.getText().toString()),
-                    edit_auteur.getText().toString(),
-                    edit_categorie.getText().toString()
-            );
+            //Controle des erreurs dans le formulaire
+            boolean erreur = false;
+            if (edit_title.getText().toString().equals("")) {
+                erreur = true;
+                edit_title.setError("Ce champ ne peut être vide!");
+            }
+            if (edit_description.getText().toString().equals("")) {
+                erreur = true;
+                edit_description.setError("Ce champ ne peut être vide!");
+            }
 
-            Log.d("DB-ADD", advice+"");
-            db.addAdvice(advice);
+            try {
+                Integer.parseInt(edit_note.getText().toString());
+            } catch (NumberFormatException e) {
+                Log.d("Format incorrecte", e.getMessage());
+                erreur =true;
+                edit_note.setError("Ce champ doit être numérique!");
+            }
+
+            //Insertion en base de données
+            if (!erreur) {
+                Advice advice = new Advice(
+                        edit_title.getText().toString(),
+                        edit_description.getText().toString(),
+                        Integer.parseInt(edit_note.getText().toString()),
+                        edit_auteur.getText().toString(),
+                        edit_categorie.getText().toString()
+                );
+
+                Log.d("DB-ADD", advice+"");
+                db.addAdvice(advice);
+                this.reset();
+                CharSequence text = "Votre avis a été inséré avec succès!";
+                int duration = Toast.LENGTH_SHORT;
+
+                Toast toast = Toast.makeText(this, text, duration);
+                toast.show();
+            }
         } else {
-
+            this.reset();
         }
 
+    }
+
+    private void reset() {
+        edit_title.setText("");
+        edit_description.setText("");
+        edit_note.setText("");
+        edit_auteur.setText("");
+        edit_categorie.setText("");
     }
 
 }
