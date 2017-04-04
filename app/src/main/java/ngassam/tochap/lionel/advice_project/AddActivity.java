@@ -1,18 +1,32 @@
 package ngassam.tochap.lionel.advice_project;
 
+import android.*;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
 import ngassam.tochap.lionel.advice_project.Metier.Advice;
 import ngassam.tochap.lionel.advice_project.Model.AdviceDb;
 
-public class AddActivity extends AppCompatActivity implements View.OnClickListener {
+public class AddActivity extends AppCompatActivity implements OnClickListener, LocationListener {
 
     private Button button_return_home;
     private Button button_add;
@@ -23,10 +37,15 @@ public class AddActivity extends AppCompatActivity implements View.OnClickListen
     private EditText edit_auteur;
     private EditText edit_categorie;
 
+    private double longitude;
+    private double latitude;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
+
+        this.handleAccessPermissions(true);
 
         //Creation de la base de données si elle n'existe pas encore
         db = new AdviceDb(this);
@@ -85,6 +104,8 @@ public class AddActivity extends AppCompatActivity implements View.OnClickListen
                         edit_auteur.getText().toString(),
                         edit_categorie.getText().toString()
                 );
+                advice.setLongitude(longitude);
+                advice.setLatitude(latitude);
 
                 Log.d("DB-ADD", advice+"");
                 db.addAdvice(advice);
@@ -107,6 +128,92 @@ public class AddActivity extends AppCompatActivity implements View.OnClickListen
         edit_note.setText("");
         edit_auteur.setText("");
         edit_categorie.setText("");
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        longitude = location.getLongitude();
+        latitude = location.getLatitude();
+        Log.d("coordonnées", "Long " + longitude + " Lat " + latitude);
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+        try {
+            List<Address> addresses =  geocoder.getFromLocation(
+                    location.getLatitude(),
+                    location.getLongitude(),
+                    1);
+            Address address = addresses.get(0);
+            Log.d("adress", address.getAddressLine(0) + "  ville : " +address.getAddressLine(1));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        Log.d("POSITION", "Received permissions results...");
+        this.handleAccessPermissions(false);
+    }
+
+    public void handleAccessPermissions(boolean requestPermissionsIfNeeded) {
+        Log.d("POSITION", "Will check permissions...");
+
+        LocationManager lm = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+        int fineLocationPermission = ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION);
+        int coarseLocationPermission = ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION);
+
+        ArrayList<String> permissionsToRequest = new ArrayList<String>();
+
+        //FINE LOCATION
+        if (fineLocationPermission == PackageManager.PERMISSION_GRANTED) {
+            Log.d("POSITION", "FINE location ok.");
+
+            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+            lm.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER, 0, 0, this);
+        } else {
+            Log.d("POSITION", "FINE location nok.");
+
+            permissionsToRequest.add(android.Manifest.permission.ACCESS_FINE_LOCATION);
+        }
+
+        //COARSE LOCATION
+        if (coarseLocationPermission == PackageManager.PERMISSION_GRANTED) {
+            Log.d("POSITION", "COARSE location ok.");
+
+            lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
+        } else {
+            Log.d("POSITION", "COARSE location nok.");
+
+            permissionsToRequest.add(android.Manifest.permission.ACCESS_COARSE_LOCATION);
+        }
+
+        if (permissionsToRequest.size() == 0) {
+            return;
+        }
+
+        if (! requestPermissionsIfNeeded) {
+            return;
+        }
+
+        Log.d("POSITION", "Need to ask some permissions.");
+        String[] permissionsToRequestArray = permissionsToRequest.toArray(new String[0]);
+        ActivityCompat.requestPermissions(this, permissionsToRequestArray, 0);
+
     }
 
 }

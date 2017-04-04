@@ -33,7 +33,9 @@ public class AdviceDb extends SQLiteOpenHelper {
                 "description TEXT, " +
                 "note INTEGER, " +
                 "auteur TEXT, " +
-                "categorie TEXT" +
+                "categorie TEXT, " +
+                "longitude double, " +
+                "latitude double" +
                 ");";
         db.execSQL(query);
         Log.d("DB", query);
@@ -52,7 +54,9 @@ public class AdviceDb extends SQLiteOpenHelper {
         values.put("description", advice.getDescription());
         values.put("note", advice.getNote());
         values.put("auteur", advice.getAuteur());
-        values.put("categorie", advice.getcategorie());
+        values.put("categorie", advice.getCategorie());
+        values.put("longitude", advice.getLongitude());
+        values.put("latitude", advice.getLatitude());
 
         this.getWritableDatabase().insert(TABLE, null, values);
 
@@ -67,7 +71,9 @@ public class AdviceDb extends SQLiteOpenHelper {
                 "description",
                 "note",
                 "auteur",
-                "categorie"
+                "categorie",
+                "longitude",
+                "latitude"
         };
 
         String orderBy = "_id ASC";
@@ -90,7 +96,9 @@ public class AdviceDb extends SQLiteOpenHelper {
                 "description",
                 "note",
                 "auteur",
-                "categorie"
+                "categorie",
+                "longitude",
+                "latitude"
         };
 
         String whereClause =  "_id = ?";

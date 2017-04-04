@@ -13,4 +13,8 @@
     <string name="label_button_raz">Reinitialiser</string>
     <string name="view_detail_title">Detail sur un avis</string>
     <string name="label_input_n_a">N/A</string>
+    <string name="label_input_longitude">Longitude</string>
+    <string name="label_input_latitude">Latitude</string>
+    <string name="marker_title">TOCHAP</string>
+    <string name="marker_text">YVANOV</string>
 </resources>

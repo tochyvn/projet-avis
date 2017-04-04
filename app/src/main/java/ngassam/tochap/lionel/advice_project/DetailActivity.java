@@ -10,9 +10,18 @@ import android.widget.Button;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 import ngassam.tochap.lionel.advice_project.Model.AdviceDb;
 
-public class DetailActivity extends AppCompatActivity implements View.OnClickListener {
+import static ngassam.tochap.lionel.advice_project.R.id.map;
+
+public class DetailActivity extends AppCompatActivity implements View.OnClickListener, OnMapReadyCallback {
 
     private AdviceDb db;
     private TextView title;
@@ -20,7 +29,12 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private TextView note;
     private TextView auteur;
     private TextView categorie;
+    private TextView longitude;
+    private TextView latitude;
     private Button return_home;
+
+    private double lat;
+    private double lng;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +46,13 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         note = (TextView) findViewById(R.id.id_detail_note);
         auteur = (TextView) findViewById(R.id.id_detail_auteur);
         categorie = (TextView) findViewById(R.id.id_detail_categorie);
+        longitude = (TextView) findViewById(R.id.id_detail_longitude);
+        latitude = (TextView) findViewById(R.id.id_detail_latitude);
+
+        //La carte geolocalisante
+        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(map);
+        mapFragment.getMapAsync(this);
+
 
         return_home = (Button) findViewById(R.id.id_button_return_home);
         return_home.setOnClickListener(this);
@@ -52,6 +73,9 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                 note.setText(cursor.getInt(3)+"");
                 auteur.setText(cursor.getString(4));
                 categorie.setText(cursor.getString(5));
+                longitude.setText(cursor.getDouble(6)+"");
+                latitude.setText(cursor.getDouble(7)+"");
+
             }
         }
 
@@ -67,4 +91,17 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        Log.d("POSITION", "MAP is ready.");
+
+        LatLng target = new LatLng(Double.parseDouble(latitude.getText().toString()), Double.parseDouble(longitude.getText().toString()));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(target, 10));
+
+        googleMap.addMarker(new MarkerOptions()
+                .title( this.getResources().getString( R.string.marker_title ) )
+                .snippet( this.getResources().getString( R.string.marker_text ) )
+                .position(target));
+
+    }
 }

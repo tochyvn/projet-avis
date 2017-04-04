@@ -12,6 +12,9 @@ public class Advice {
     private int note;
     private String auteur;
     private String categorie;
+    private double longitude;
+    private double latitude;
+
 
     public Advice() {
         super();
@@ -57,11 +60,35 @@ public class Advice {
         this.auteur = auteur;
     }
 
-    public String getcategorie() {
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getCategorie() {
         return categorie;
     }
 
-    public void setcategorie(String categorie) {
+    public void setCategorie(String categorie) {
         this.categorie = categorie;
     }
 
